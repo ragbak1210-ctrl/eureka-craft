@@ -1,30 +1,42 @@
+// pages/admin/index.js
 import { useEffect, useState } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../../lib/firebase";
-import { useRouter } from "next/router";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { app } from "../../lib/firebase"; // adjust path carefully
 
-export default function AdminDashboard() {
+const AdminDashboard = () => {
+  const auth = getAuth(app);
   const [user, setUser] = useState(null);
-  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        router.push("/auth"); // redirect to auth if not logged in
-      }
+      setUser(currentUser);
     });
     return () => unsubscribe();
-  }, [router]);
+  }, [auth]);
 
-  if (!user) return <p>Loading...</p>;
+  const handleLogout = async () => {
+    await signOut(auth);
+  };
+
+  if (!user) {
+    return (
+      <div style={{ padding: 40 }}>
+        <h1>Admin Dashboard</h1>
+        <p>You must be logged in to view this page.</p>
+        <a href="/auth">
+          <button>Go to Login</button>
+        </a>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ maxWidth: "800px", margin: "50px auto", textAlign: "center" }}>
+    <div style={{ padding: 40 }}>
       <h1>Admin Dashboard</h1>
       <p>Welcome, {user.email}</p>
-      <button onClick={() => signOut(auth)}>Logout</button>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
-}
+};
+
+export default AdminDashboard;
