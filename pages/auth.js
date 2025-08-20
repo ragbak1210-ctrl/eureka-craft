@@ -1,43 +1,62 @@
 // pages/auth.js
-import { useEffect, useState } from "react";
-import { auth, signInWithGoogle, logOut } from "../lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { useState } from "react";
+import { auth } from "../lib/firebase";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 
 export default function AuthPage() {
-  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mode, setMode] = useState("login"); // login | signup | reset
+  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return () => unsubscribe();
-  }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (mode === "login") {
+        await signInWithEmailAndPassword(auth, email, password);
+        setMessage("✅ Logged in!");
+      } else if (mode === "signup") {
+        await createUserWithEmailAndPassword(auth, email, password);
+        setMessage("✅ Account created!");
+      } else if (mode === "reset") {
+        await sendPasswordResetEmail(auth, email);
+        setMessage("📩 Reset link sent!");
+      }
+    } catch (err) {
+      setMessage(`❌ ${err.message}`);
+    }
+  };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" }}>
-      {!user ? (
-        <>
-          <h1>Welcome! Please sign in</h1>
-          <button 
-            onClick={signInWithGoogle} 
-            style={{ padding: "10px 20px", marginTop: "20px", background: "#4285F4", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }}
-          >
-            Sign in with Google
-          </button>
-        </>
-      ) : (
-        <>
-          <h1>Hello, {user.displayName} 👋</h1>
-          <p>Email: {user.email}</p>
-          <img src={user.photoURL} alt="profile" style={{ borderRadius: "50%", marginTop: "10px" }} />
-          <button 
-            onClick={logOut} 
-            style={{ padding: "10px 20px", marginTop: "20px", background: "red", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }}
-          >
-            Logout
-          </button>
-        </>
-      )}
+    <div style={{ maxWidth: "400px", margin: "50px auto", textAlign: "center" }}>
+      <h1>{mode === "login" ? "Login" : mode === "signup" ? "Sign Up" : "Reset Password"}</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        /><br /><br />
+        {mode !== "reset" && (
+          <>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            /><br /><br />
+          </>
+        )}
+        <button type="submit">Submit</button>
+      </form>
+      <p>{message}</p>
+      <div style={{ marginTop: "20px" }}>
+        {mode !== "login" && <button onClick={() => setMode("login")}>Go to Login</button>}
+        {mode !== "signup" && <button onClick={() => setMode("signup")}>Go to Signup</button>}
+        {mode !== "reset" && <button onClick={() => setMode("reset")}>Forgot Password?</button>}
+      </div>
     </div>
   );
 }
