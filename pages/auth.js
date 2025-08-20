@@ -1,62 +1,76 @@
 // pages/auth.js
 import { useState } from "react";
-import { auth } from "../lib/firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { app } from "../lib/firebase"; // make sure lib/firebase.js exists and exports `app`
 
-export default function AuthPage() {
+const AuthPage = () => {
+  const auth = getAuth(app);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mode, setMode] = useState("login"); // login | signup | reset
-  const [message, setMessage] = useState("");
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // login
+  const handleLogin = async () => {
     try {
-      if (mode === "login") {
-        await signInWithEmailAndPassword(auth, email, password);
-        setMessage("✅ Logged in!");
-      } else if (mode === "signup") {
-        await createUserWithEmailAndPassword(auth, email, password);
-        setMessage("✅ Account created!");
-      } else if (mode === "reset") {
-        await sendPasswordResetEmail(auth, email);
-        setMessage("📩 Reset link sent!");
-      }
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      setUser(res.user);
+      setError("");
     } catch (err) {
-      setMessage(`❌ ${err.message}`);
+      setError(err.message);
     }
   };
 
+  // signup
+  const handleSignup = async () => {
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      setUser(res.user);
+      setError("");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // logout
+  const handleLogout = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
+
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto", textAlign: "center" }}>
-      <h1>{mode === "login" ? "Login" : mode === "signup" ? "Sign Up" : "Reset Password"}</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        /><br /><br />
-        {mode !== "reset" && (
-          <>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            /><br /><br />
-          </>
-        )}
-        <button type="submit">Submit</button>
-      </form>
-      <p>{message}</p>
-      <div style={{ marginTop: "20px" }}>
-        {mode !== "login" && <button onClick={() => setMode("login")}>Go to Login</button>}
-        {mode !== "signup" && <button onClick={() => setMode("signup")}>Go to Signup</button>}
-        {mode !== "reset" && <button onClick={() => setMode("reset")}>Forgot Password?</button>}
-      </div>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 40 }}>
+      <h1>Auth Page</h1>
+
+      {user ? (
+        <div>
+          <p>Welcome, {user.email}</p>
+          <button onClick={handleLogout}>Logout</button>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, width: 300 }}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button onClick={handleLogin}>Login</button>
+          <button onClick={handleSignup}>Signup</button>
+
+          {error && <p style={{ color: "red" }}>{error}</p>}
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default AuthPage;
