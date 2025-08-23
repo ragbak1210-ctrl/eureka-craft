@@ -17,6 +17,7 @@ export default function Home() {
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link href="/services" className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
             Explore Our Services
+            
           </Link>
           <Link href="/clarity-xray" className="px-6 py-3 border border-orange-600 text-orange-600 rounded-lg hover:bg-orange-600 hover:text-white">
             Book The Clarity X-Ray™
