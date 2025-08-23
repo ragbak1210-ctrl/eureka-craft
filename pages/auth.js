@@ -1,63 +1,65 @@
-// pages/auth.js
 import { useState } from "react";
-import { auth } from "../lib/firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { auth, db } from "../lib/firebase";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
+  const [isSignUp, setIsSignUp] = useState(false);
+  const router = useRouter();
 
-  const handleSignUp = async () => {
+  const handleAuth = async (e) => {
+    e.preventDefault();
     try {
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
-      setUser(userCred.user);
+      let userCredential;
+      if (isSignUp) {
+        userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+        // 👇 assign role based on email
+        const role = email === "youremail@example.com" ? "admin" : "user";
+
+        await setDoc(doc(db, "users", userCredential.user.uid), {
+          email,
+          role,
+          createdAt: new Date(),
+        });
+
+      } else {
+        userCredential = await signInWithEmailAndPassword(auth, email, password);
+      }
+
+      router.push("/"); // redirect to home after login/signup
     } catch (err) {
+      console.error(err);
       alert(err.message);
     }
-  };
-
-  const handleSignIn = async () => {
-    try {
-      const userCred = await signInWithEmailAndPassword(auth, email, password);
-      setUser(userCred.user);
-    } catch (err) {
-      alert(err.message);
-    }
-  };
-
-  const handleSignOut = async () => {
-    await signOut(auth);
-    setUser(null);
   };
 
   return (
-    <div style={{ padding: 40 }}>
-      <h1>Auth Page</h1>
-
-      {user ? (
-        <div>
-          <p>Welcome {user.email}</p>
-          <button onClick={handleSignOut}>Sign Out</button>
-        </div>
-      ) : (
-        <>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          /><br />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          /><br />
-          <button onClick={handleSignUp}>Sign Up</button>
-          <button onClick={handleSignIn}>Sign In</button>
-        </>
-      )}
+    <div>
+      <h1>{isSignUp ? "Sign Up" : "Login"}</h1>
+      <form onSubmit={handleAuth}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">{isSignUp ? "Sign Up" : "Login"}</button>
+      </form>
+      <p onClick={() => setIsSignUp(!isSignUp)}>
+        {isSignUp ? "Already have an account? Login" : "No account? Sign Up"}
+      </p>
     </div>
   );
 }
