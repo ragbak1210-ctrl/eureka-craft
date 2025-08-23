@@ -21,7 +21,7 @@ export default function About() {
       <ul>
         <li>🔹 Pods, Not Pyramids — small, autonomous teams.</li>
         <li>🔹 System, Then Style — process first, aesthetics second.</li>
-        <li>🔹 Clarity > Creativity — precision breeds great outcomes.</li>
+        <li>🔹 Clarity &gt; Creativity — precision breeds great outcomes.</li>
       </ul>
 
       <h2>Our Rituals</h2>
