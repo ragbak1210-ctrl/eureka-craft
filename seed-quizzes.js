@@ -1,40 +1,29 @@
-// seed-quizzes.js
 const admin = require("firebase-admin");
-const serviceAccount = require("./serviceAccountKey.json"); // We'll add this next
+const fs = require("fs");
 
+// Load the service account key JSON file
+const serviceAccount = require("./serviceAccountKey.json");
+
+// Initialize Firebase Admin SDK with credentials
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
 const db = admin.firestore();
 
-const quizzes = [
-  {
-    category: "branding",
-    question: "What is Eureka Craft’s core philosophy?",
-    options: ["Sell products", "Craft belief", "Copy trends", "Push ads"],
-    answer: "Craft belief",
-  },
-  {
-    category: "strategy",
-    question: "What does 'Clarity > Creativity' mean at Eureka Craft?",
-    options: [
-      "Creativity always comes first",
-      "Clarity leads to stronger creativity",
-      "Ignore clarity",
-      "Clarity blocks creativity",
-    ],
-    answer: "Clarity leads to stronger creativity",
-  },
-];
+// Load quiz data
+const quizzes = JSON.parse(fs.readFileSync("./seed-quizzes.json", "utf8"));
 
-async function seed() {
-  for (let quiz of quizzes) {
-    await db.collection("quizzes").add(quiz);
-    console.log(`✅ Added: ${quiz.question}`);
+// Insert quizzes
+(async () => {
+  try {
+    for (const quiz of quizzes) {
+      await db.collection("quizzes").add(quiz);
+    }
+    console.log("✅ Quizzes imported successfully!");
+    process.exit(0);
+  } catch (error) {
+    console.error("❌ Error importing quizzes:", error);
+    process.exit(1);
   }
-  console.log("🎉 Seeding complete!");
-  process.exit();
-}
-
-seed();
+})();
