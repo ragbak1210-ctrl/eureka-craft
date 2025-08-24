@@ -1,14 +1,12 @@
 import "@/styles/globals.css";
 import Layout from "@/components/Layout";
-import Crafty from "@/components/Crafty";
+import CraftyWidget from "@/components/CraftyWidget";
 
-function MyApp({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps }) {
   return (
     <Layout>
       <Component {...pageProps} />
-      <Crafty /> {/* 👈 Appears on all pages */}
+      <CraftyWidget /> {/* Crafty everywhere */}
     </Layout>
   );
 }
-
-export default MyApp;
