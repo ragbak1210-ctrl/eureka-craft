@@ -1,45 +1,75 @@
 import { useState } from "react";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export default function Crafty() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
     { from: "crafty", text: "👋 Hi, I’m Crafty! Pick a mode and let’s chat." },
   ]);
-  const [mode, setMode] = useState("chill"); // default mode
+  const [mode, setMode] = useState("chill");
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const modes = {
-    boss: "💼 Boss Mode: Sharp. Direct. No fluff.",
-    chill: "😎 Chill Mode: Easy, relaxed vibes.",
-    saas: "👑 SaaS Queen Mode: Witty & bold.",
+    boss: "You are Crafty in Boss Mode: assertive, no-fluff, straight to solutions.",
+    chill: "You are Crafty in Chill Mode: friendly, casual, stress-free vibes.",
+    saas: "You are Crafty in SaaS Queen Mode: witty, bold, and marketing-savvy.",
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
-    setMessages([...messages, { from: "user", text: input }]);
 
-    // Example Crafty responses
-    let response = "";
-    if (mode === "boss") {
-      response = "Let’s cut to the chase. What’s blocking you?";
-    } else if (mode === "chill") {
-      response = "No stress 😌 let’s think this through.";
-    } else if (mode === "saas") {
-      response = "Honey, if it doesn’t sparkle, it won’t sell. ✨";
+    const userMessage = { from: "user", text: input };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setLoading(true);
+
+    try {
+      // Save to Firestore
+      await addDoc(collection(db, "crafty-conversations"), {
+        mode,
+        message: input,
+        from: "user",
+        createdAt: serverTimestamp(),
+      });
+
+      // Call backend API for response
+      const res = await fetch("/api/crafty", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: input, mode }),
+      });
+
+      const data = await res.json();
+      const reply = { from: "crafty", text: data.reply };
+
+      setMessages((prev) => [...prev, reply]);
+
+      // Save Crafty's reply
+      await addDoc(collection(db, "crafty-conversations"), {
+        mode,
+        message: data.reply,
+        from: "crafty",
+        createdAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.error(err);
+      setMessages((prev) => [
+        ...prev,
+        { from: "crafty", text: "⚠️ Oops, I couldn’t fetch a reply." },
+      ]);
     }
 
-    setMessages((prev) => [...prev, { from: "crafty", text: response }]);
-    setInput("");
+    setLoading(false);
   };
 
   return (
     <div>
-      {/* Floating Button */}
       <button className="crafty-btn" onClick={() => setOpen(!open)}>
         🤖 Crafty
       </button>
 
-      {/* Chat Window */}
       {open && (
         <div className="crafty-window">
           <div className="crafty-header">
@@ -58,6 +88,7 @@ export default function Crafty() {
                 {msg.text}
               </div>
             ))}
+            {loading && <div className="crafty">⏳ Crafty is thinking...</div>}
           </div>
 
           <div className="crafty-input">
@@ -72,75 +103,6 @@ export default function Crafty() {
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        .crafty-btn {
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          background: #0070f3;
-          color: white;
-          border: none;
-          padding: 12px 20px;
-          border-radius: 50px;
-          cursor: pointer;
-          font-size: 1rem;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-        .crafty-window {
-          position: fixed;
-          bottom: 80px;
-          right: 20px;
-          width: 320px;
-          background: white;
-          border: 1px solid #ddd;
-          border-radius: 10px;
-          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-        }
-        .crafty-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 10px;
-          background: #f3f3f3;
-          border-bottom: 1px solid #ddd;
-        }
-        .crafty-messages {
-          flex: 1;
-          padding: 10px;
-          overflow-y: auto;
-          max-height: 250px;
-        }
-        .crafty-messages .user {
-          text-align: right;
-          color: blue;
-          margin: 5px 0;
-        }
-        .crafty-messages .crafty {
-          text-align: left;
-          color: black;
-          margin: 5px 0;
-        }
-        .crafty-input {
-          display: flex;
-          border-top: 1px solid #ddd;
-        }
-        .crafty-input input {
-          flex: 1;
-          border: none;
-          padding: 10px;
-        }
-        .crafty-input button {
-          border: none;
-          padding: 10px;
-          background: #0070f3;
-          color: white;
-          cursor: pointer;
-        }
-      `}</style>
     </div>
   );
 }
