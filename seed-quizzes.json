@@ -1,0 +1,16 @@
+{
+  "quizzes": {
+    "Q1": {
+      "question": "What is Eureka Craft’s core philosophy?",
+      "options": ["Sell products", "Craft belief", "Copy trends", "Push ads"],
+      "answer": "Craft belief",
+      "category": "branding"
+    },
+    "Q2": {
+      "question": "Which methodology does Eureka Craft emphasize before aesthetics?",
+      "options": ["Style first", "System first", "Trends first", "Marketing first"],
+      "answer": "System first",
+      "category": "methodology"
+    }
+  }
+}
