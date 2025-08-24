@@ -1,48 +1,97 @@
-// pages/quiz.js
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { db } from "../lib/firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
-export default function Quiz() {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
+export default function QuizPage() {
+  const [quizzes, setQuizzes] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [expanded, setExpanded] = useState(null);
 
-  const questions = [
-    { id: "q1", text: "What’s your primary growth challenge?", options: ["Visibility", "Leads", "Conversions"] },
-    { id: "q2", text: "What best describes your brand stage?", options: ["Early-stage", "Scaling", "Established"] },
-    { id: "q3", text: "Which service interests you most?", options: ["Ghostwriting", "SEO & Blogs", "Clarity X-Ray", "Outreach"] }
-  ];
+  // Fetch quizzes from Firestore
+  useEffect(() => {
+    const fetchQuizzes = async () => {
+      try {
+        let q = collection(db, "quizzes");
 
-  const handleAnswer = (option) => {
-    setAnswers({ ...answers, [questions[step].id]: option });
-    if (step + 1 < questions.length) {
-      setStep(step + 1);
-    } else {
-      console.log("Quiz complete:", answers);
-      alert("Thank you! Crafty will analyze your inputs.");
-    }
+        if (selectedCategory !== "all") {
+          q = query(q, where("category", "==", selectedCategory));
+        }
+
+        const snapshot = await getDocs(q);
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setQuizzes(data);
+      } catch (error) {
+        console.error("Error fetching quizzes:", error);
+      }
+    };
+
+    fetchQuizzes();
+  }, [selectedCategory]);
+
+  // Toggle expand/collapse for each quiz question
+  const toggleExpand = (id) => {
+    setExpanded(expanded === id ? null : id);
   };
 
   return (
-    <section className="container">
-      <h1>Brand Clarity Quiz</h1>
-      <p>
-        Take this short quiz and let <b>Crafty</b> highlight your blindspots
-        and suggest fixes tailored for your brand.
-      </p>
+    <div className="min-h-screen p-8 bg-gray-50">
+      <h1 className="text-4xl font-bold mb-6">Eureka Craft Quiz</h1>
 
-      {step < questions.length ? (
-        <div className="quiz-card">
-          <h2>{questions[step].text}</h2>
-          <ul>
-            {questions[step].options.map((opt) => (
-              <li key={opt}>
-                <button onClick={() => handleAnswer(opt)}>{opt}</button>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {/* Filter Dropdown */}
+      <div className="mb-6">
+        <label className="mr-2 font-semibold">Filter by Category:</label>
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="border p-2 rounded"
+        >
+          <option value="all">All</option>
+          <option value="branding">Branding</option>
+          <option value="content">Content</option>
+          <option value="seo">SEO</option>
+        </select>
+      </div>
+
+      {/* Quiz List */}
+      {quizzes.length === 0 ? (
+        <p>No quizzes found.</p>
       ) : (
-        <p>Loading Crafty’s insights...</p>
+        quizzes.map((quiz) => (
+          <div
+            key={quiz.id}
+            className="border rounded p-4 mb-4 bg-white shadow"
+          >
+            <div
+              className="cursor-pointer flex justify-between items-center"
+              onClick={() => toggleExpand(quiz.id)}
+            >
+              <h2 className="text-xl font-semibold">{quiz.question}</h2>
+              <span>{expanded === quiz.id ? "▲" : "▼"}</span>
+            </div>
+
+            {expanded === quiz.id && (
+              <div className="mt-4">
+                {quiz.options.map((opt, index) => (
+                  <div key={index} className="mb-2">
+                    <label>
+                      <input
+                        type="radio"
+                        name={`quiz-${quiz.id}`}
+                        value={opt}
+                        className="mr-2"
+                      />
+                      {opt}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))
       )}
-    </section>
+    </div>
   );
 }
