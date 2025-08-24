@@ -1,6 +1,6 @@
 // seed-quizzes.js
 const admin = require("firebase-admin");
-const serviceAccount = require("./serviceAccountKey.json"); // download this from Firebase Console
+const serviceAccount = require("./serviceAccountKey.json"); // make sure this file exists!
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -17,7 +17,7 @@ const quizzes = [
   },
   {
     category: "strategy",
-    question: "What does 'Clarity > Creativity' mean in Eureka Craft?",
+    question: "What does 'Clarity > Creativity' mean at Eureka Craft?",
     options: [
       "Creativity always comes first",
       "Clarity leads to stronger creativity",
@@ -26,15 +26,21 @@ const quizzes = [
     ],
     answer: "Clarity leads to stronger creativity",
   },
-  // 👉 I’ll expand this with 45–50 full questions for you
+  {
+    category: "culture",
+    question: "What structure does Eureka Craft prefer for teams?",
+    options: ["Hierarchy", "Flat", "Pods, not pyramids", "Freelance only"],
+    answer: "Pods, not pyramids",
+  },
 ];
 
 async function seed() {
   for (let quiz of quizzes) {
     await db.collection("quizzes").add(quiz);
-    console.log(`Added: ${quiz.question}`);
+    console.log(`✅ Added: ${quiz.question}`);
   }
-  console.log("✅ Seeding complete!");
+  console.log("🎉 Seeding complete!");
+  process.exit();
 }
 
 seed();
