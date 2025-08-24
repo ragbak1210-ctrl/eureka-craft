@@ -1,11 +1,14 @@
-// pages/_app.js
 import "@/styles/globals.css";
 import Layout from "@/components/Layout";
+import Crafty from "@/components/Crafty";
 
-export default function App({ Component, pageProps }) {
+function MyApp({ Component, pageProps }) {
   return (
     <Layout>
       <Component {...pageProps} />
+      <Crafty /> {/* 👈 Appears on all pages */}
     </Layout>
   );
 }
+
+export default MyApp;
