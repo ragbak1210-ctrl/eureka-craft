@@ -1,4 +1,3 @@
-// pages/api/crafty.js
 import OpenAI from "openai";
 
 const client = new OpenAI({
@@ -8,27 +7,25 @@ const client = new OpenAI({
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).end();
 
-  const { prompt, mode } = req.body;
+  const { message, mode } = req.body;
 
-  const modes = {
-    boss: "You are Crafty in Boss Mode: assertive, direct, business-focused.",
-    chill: "You are Crafty in Chill Mode: relaxed, casual, supportive.",
-    saas: "You are Crafty in SaaS Queen Mode: witty, bold, marketing-savvy.",
-  };
-
-  try {
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: modes[mode] || modes.chill },
-        { role: "user", content: prompt },
-      ],
-    });
-
-    const reply = completion.choices[0].message.content;
-    res.status(200).json({ reply });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ reply: "⚠️ Error fetching AI response." });
+  let personaPrompt = "";
+  if (mode === "boss") {
+    personaPrompt = "You are Crafty in Boss Mode: sharp, direct, no-nonsense.";
+  } else if (mode === "chill") {
+    personaPrompt = "You are Crafty in Chill Mode: relaxed, friendly, witty.";
+  } else if (mode === "saas") {
+    personaPrompt =
+      "You are Crafty in SaaS Queen Mode: confident, strategic, bold.";
   }
+
+  const completion = await client.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: personaPrompt },
+      { role: "user", content: message },
+    ],
+  });
+
+  res.status(200).json({ reply: completion.choices[0].message.content });
 }
