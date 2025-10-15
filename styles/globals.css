@@ -1,40 +1,134 @@
-/* styles/globals.css */
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&family=Shadows+Into+Light&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;900&family=Shadows+Into+Light&display=swap');
 
-:root {
-  --color-black: #000000;
-  --color-golden: #ffcf00;
-  --color-yellow: #ffde59;
-  --color-white: #ffffff;
-}
-
+html,
 body {
-  font-family: 'Raleway', sans-serif;
-  color: var(--color-black);
-  background-color: var(--color-white);
-  margin: 0;
   padding: 0;
-}
-
-h1, h2, h3, h4 {
+  margin: 0;
   font-family: 'Raleway', sans-serif;
-  color: var(--color-black);
+  background-color: #ffffff;
+  color: #000000;
+  line-height: 1.6;
 }
 
-h1 span, h2 span {
-  color: var(--color-golden);
+/* Global Layout */
+main {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-button, .cta {
-  background-color: var(--color-black);
-  color: var(--color-yellow);
-  border-radius: 6px;
-  padding: 0.75rem 1.5rem;
+/* Navbar */
+nav {
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.nav-link {
+  color: #000000;
+  text-decoration: none;
   font-weight: 600;
-  transition: 0.3s ease;
+  transition: color 0.3s ease;
 }
 
-button:hover, .cta:hover {
-  background-color: var(--color-golden);
-  color: var(--color-black);
+.nav-link:hover {
+  color: #ffcf00;
+}
+
+/* Buttons */
+button,
+.cta-button {
+  display: inline-block;
+  padding: 0.8rem 1.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #000000;
+  color: #ffde59;
+}
+
+.btn-primary:hover {
+  background-color: #ffcf00;
+  color: #000000;
+}
+
+.btn-outline {
+  border: 2px solid #ffcf00;
+  color: #000000;
+}
+
+.btn-outline:hover {
+  background-color: #ffcf00;
+  color: #000000;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 800;
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+h1 span,
+h2 span {
+  color: #ffcf00;
+}
+
+/* Footer */
+footer {
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  padding: 2rem 0;
+  font-size: 0.9rem;
+}
+
+/* Highlight Boxes */
+.section-box {
+  background-color: #ffde59;
+  color: #000000;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Hero Sections */
+.hero {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 900;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #444;
+}
+
+/* Forms */
+input,
+textarea {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.7rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #ffcf00;
+  box-shadow: 0 0 5px rgba(255, 207, 0, 0.5);
 }
