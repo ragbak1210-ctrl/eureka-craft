@@ -26,7 +26,7 @@ p {
 
 /* Reusable golden button */
 .btn-gold {
-  @apply bg-golden text-white font-semibold px-6 py-3 rounded-md transition-all duration-300 hover:bg-yellow;
+  @apply bg-golden text-black font-semibold px-6 py-3 rounded-md transition-all duration-300 hover:bg-yellow;
 }
 
 /* Section padding */
