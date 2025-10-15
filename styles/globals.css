@@ -1,50 +1,40 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* styles/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&family=Shadows+Into+Light&display=swap');
 
-/* Base styles */
+:root {
+  --color-black: #000000;
+  --color-golden: #ffcf00;
+  --color-yellow: #ffde59;
+  --color-white: #ffffff;
+}
+
 body {
-  @apply font-primary bg-white text-black;
-  scroll-behavior: smooth;
+  font-family: 'Raleway', sans-serif;
+  color: var(--color-black);
+  background-color: var(--color-white);
+  margin: 0;
+  padding: 0;
 }
 
 h1, h2, h3, h4 {
-  @apply font-semibold text-black;
+  font-family: 'Raleway', sans-serif;
+  color: var(--color-black);
 }
 
-h1 {
-  @apply text-4xl md:text-5xl;
+h1 span, h2 span {
+  color: var(--color-golden);
 }
 
-h2 {
-  @apply text-3xl md:text-4xl;
+button, .cta {
+  background-color: var(--color-black);
+  color: var(--color-yellow);
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: 0.3s ease;
 }
 
-p {
-  @apply text-base md:text-lg leading-relaxed;
-}
-
-/* Reusable golden button */
-.btn-gold {
-  @apply bg-golden text-black font-semibold px-6 py-3 rounded-md transition-all duration-300 hover:bg-yellow;
-}
-
-/* Section padding */
-.section {
-  @apply py-16 px-6 md:px-12;
-}
-
-/* Shadow Script headline */
-.script-title {
-  @apply font-secondary text-3xl text-golden;
-}
-
-/* Navbar hover */
-.nav-link {
-  @apply text-black hover:text-golden transition-colors duration-300;
-}
-
-/* Footer style */
-.footer {
-  @apply bg-black text-white py-10 text-center;
+button:hover, .cta:hover {
+  background-color: var(--color-golden);
+  color: var(--color-black);
 }
