@@ -8,17 +8,17 @@ module.exports = {
     extend: {
       colors: {
         black: "#000000",
-        golden: "#c89b3c", // yellowish gold tone
-        yellow: "#fabe17",
-        white: "#fefefe",
+        golden: "#ffcf00",
+        yellow: "#ffde59",
+        white: "#ffffff",
         graylight: "#f4f4f4",
       },
       fontFamily: {
         primary: ["Raleway", "sans-serif"],
-        secondary: ["'Shadow Script'", "cursive"],
+        secondary: ["'Shadows Into Light'", "cursive"],
       },
       backgroundImage: {
-        "gold-gradient": "linear-gradient(90deg, #fabe17 0%, #c89b3c 100%)",
+        "gold-gradient": "linear-gradient(90deg, #ffde59 0%, #ffcf00 100%)",
       },
     },
   },
