@@ -2,11 +2,18 @@ import "@/styles/globals.css";
 import Layout from "@/components/Layout";
 import CraftyWidget from "@/components/CraftyWidget";
 
-export default function MyApp({ Component, pageProps }) {
+export default function App({ Component, pageProps }) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-      <CraftyWidget /> {/* Crafty everywhere */}
-    </Layout>
+    <>
+      {/* Global site layout (Navbar + Footer) */}
+      <Layout>
+        {/* Page content */}
+        <Component {...pageProps} />
+      </Layout>
+
+      {/* Crafty appears globally across all pages */}
+      <CraftyWidget />
+    </>
   );
 }
+
