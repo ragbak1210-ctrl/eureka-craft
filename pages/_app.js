@@ -9,15 +9,15 @@ const raleway = Raleway({
   variable: "--font-raleway",
 });
 
-const shadowScript = Shadows_Into_Light_Two({
+const shadows = Shadows_Into_Light_Two({
   subsets: ["latin"],
-  weight: ["400"], // ✅ only 400 supported
-  variable: "--font-shadow",
+  weight: "400", // ✅ fixed: only one available weight
+  variable: "--font-shadows",
 });
 
 export default function MyApp({ Component, pageProps }) {
   return (
-    <div className={`${raleway.variable} ${shadow.variable} font-raleway bg-white text-black`}>
+    <div className={`${raleway.variable} ${shadows.variable} font-sans`}>
       <Layout>
         <Component {...pageProps} />
         <CraftyWidget />
