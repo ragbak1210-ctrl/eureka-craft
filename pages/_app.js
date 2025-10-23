@@ -1,16 +1,18 @@
 import "@/styles/globals.css";
 import Layout from "@/components/Layout";
 import CraftyWidget from "@/components/CraftyWidget";
-import { Raleway, Shadows_Into_Light_Two } from "next/font/google";
 
-// Raleway: multiple weights
+// ✅ Legacy import for Google Fonts — no strict weight validation
+import { Raleway, Shadows_Into_Light_Two } from "@next/font/google";
+
+// Raleway supports multiple weights
 const raleway = Raleway({
   subsets: ["latin"],
   variable: "--font-raleway",
   weight: ["400", "700"],
 });
 
-// Shadows Into Light Two: only one weight, omit it entirely
+// Shadows Into Light Two — single weight, so omit weight here
 const shadows = Shadows_Into_Light_Two({
   subsets: ["latin"],
   variable: "--font-shadow",
