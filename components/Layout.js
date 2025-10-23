@@ -1,31 +1,37 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Layout({ children }) {
-  return (
-    <div className="flex flex-col min-h-screen bg-white text-black font-['Raleway']">
-      {/* Navbar */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          {/* Brand */}
-          <h1 className="text-2xl font-extrabold text-[#ffcf00] tracking-wide">
-            Eureka Craft
-          </h1>
+  const router = useRouter();
 
-          {/* Navigation */}
-          <div className="space-x-6 text-base font-medium">
-            {[
-              { href: "/", label: "Home" },
-              { href: "/about", label: "About" },
-              { href: "/services", label: "Services" },
-              { href: "/quiz", label: "Quiz" },
-              { href: "/clarity-xray", label: "Clarity X-Ray" },
-              { href: "/blogs", label: "Blogs" },
-              { href: "/culture", label: "Culture Deck" },
-              { href: "/faq", label: "FAQ" },
-              { href: "/contact", label: "Contact" },
-            ].map(({ href, label }) => (
-              <Link key={href} href={href} passHref>
-                <span className="cursor-pointer hover:text-[#ffcf00] transition-colors duration-200">
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/services", label: "Services" },
+    { href: "/quiz", label: "Quiz" },
+    { href: "/clarity-xray", label: "Clarity X-Ray" },
+    { href: "/blogs", label: "Blogs" },
+    { href: "/culture", label: "Culture Deck" },
+    { href: "/faq", label: "FAQ" },
+    { href: "/contact", label: "Contact" },
+  ];
+
+  return (
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#ffffff] via-[#fffcf0] to-[#fff4cc] text-black">
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg shadow-md">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <Link href="/" className="text-2xl font-extrabold tracking-tight text-[#ffcf00] hover:scale-105 transition-transform">
+            Eureka Craft
+          </Link>
+          <div className="flex space-x-8 text-sm font-medium">
+            {navLinks.map(({ href, label }) => (
+              <Link key={href} href={href}>
+                <span
+                  className={`cursor-pointer hover:text-[#ffcf00] transition-colors ${
+                    router.pathname === href ? "text-[#ffcf00]" : "text-black"
+                  }`}
+                >
                   {label}
                 </span>
               </Link>
@@ -34,18 +40,18 @@ export default function Layout({ children }) {
         </div>
       </nav>
 
-      {/* Main Page Content */}
-      <main className="flex-grow bg-white text-black px-6 py-10">
-        {children}
-      </main>
+      {/* Page Content */}
+      <main className="flex-grow py-12 px-6 md:px-10">{children}</main>
 
       {/* Footer */}
-      <footer className="bg-black text-white text-center py-6 mt-10">
-        <p className="text-sm tracking-wide">
-          © {new Date().getFullYear()}{" "}
-          <span className="text-[#ffde59] font-semibold">Eureka Craft</span> ·
-          All rights reserved.
-        </p>
+      <footer className="bg-black text-white py-10 mt-16">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-[#ffde59] font-bold text-xl">Eureka Craft</p>
+          <p className="text-gray-400 text-sm">
+            © {new Date().getFullYear()} Eureka Craft · Crafted with clarity.
+          </p>
+          <p className="italic font-shadow text-[#ffcf00] text-lg">"Where boring brands become unforgettable."</p>
+        </div>
       </footer>
     </div>
   );
