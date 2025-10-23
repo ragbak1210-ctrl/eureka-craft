@@ -3,16 +3,17 @@ import Layout from "@/components/Layout";
 import CraftyWidget from "@/components/CraftyWidget";
 import { Raleway, Shadows_Into_Light_Two } from "next/font/google";
 
-// ✅ Add proper weight for Shadows Into Light Two
+// ✅ Proper font initialization
 const raleway = Raleway({
   subsets: ["latin"],
   variable: "--font-raleway",
+  weight: ["400", "700"], // Raleway supports multiple weights
 });
 
-const shadow = Shadows_Into_Light_Two({
+const shadows = Shadows_Into_Light_Two({
   subsets: ["latin"],
-  weight: "400", // ✅ only available weight
   variable: "--font-shadow",
+  weight: "400", // ✅ this font only supports 400
 });
 
 export default function MyApp({ Component, pageProps }) {
@@ -20,7 +21,7 @@ export default function MyApp({ Component, pageProps }) {
     <div className={`${raleway.variable} ${shadows.variable} font-sans`}>
       <Layout>
         <Component {...pageProps} />
-        <CraftyWidget /> {/* Keep Crafty visible on all pages */}
+        <CraftyWidget />
       </Layout>
     </div>
   );
