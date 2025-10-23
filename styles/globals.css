@@ -1,134 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;900&family=Shadows+Into+Light&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700;900&family=Shadows+Into+Light+Two&display=swap');
 
-html,
+:root {
+  --color-black: #000000;
+  --color-gold: #ffcf00;
+  --color-yellow: #ffde59;
+  --color-white: #ffffff;
+  --font-raleway: 'Raleway', sans-serif;
+  --font-shadow: 'Shadows Into Light Two', cursive;
+}
+
 body {
-  padding: 0;
-  margin: 0;
-  font-family: 'Raleway', sans-serif;
-  background-color: #ffffff;
-  color: #000000;
-  line-height: 1.6;
-}
-
-/* Global Layout */
-main {
-  padding: 4rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Navbar */
-nav {
-  background: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.nav-link {
-  color: #000000;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #ffcf00;
-}
-
-/* Buttons */
-button,
-.cta-button {
-  display: inline-block;
-  padding: 0.8rem 1.8rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
+  font-family: var(--font-raleway);
+  background: linear-gradient(180deg, var(--color-white) 0%, #fff7d1 100%);
+  color: var(--color-black);
   transition: all 0.3s ease;
 }
 
-.btn-primary {
-  background-color: #000000;
-  color: #ffde59;
-}
-
-.btn-primary:hover {
-  background-color: #ffcf00;
-  color: #000000;
-}
-
-.btn-outline {
-  border: 2px solid #ffcf00;
-  color: #000000;
-}
-
-.btn-outline:hover {
-  background-color: #ffcf00;
-  color: #000000;
-}
-
-/* Headings */
-h1,
-h2,
-h3,
-h4 {
+/* Typography hierarchy */
+h1, h2, h3 {
   font-weight: 800;
-  color: #000000;
-  margin-bottom: 1rem;
+  color: var(--color-black);
+  line-height: 1.2;
 }
 
-h1 span,
-h2 span {
-  color: #ffcf00;
+h1 span, h2 span {
+  color: var(--color-gold);
 }
 
-/* Footer */
-footer {
-  background-color: #000000;
-  color: #ffffff;
-  text-align: center;
-  padding: 2rem 0;
-  font-size: 0.9rem;
+p {
+  line-height: 1.7;
+  color: #333;
 }
 
-/* Highlight Boxes */
-.section-box {
-  background-color: #ffde59;
-  color: #000000;
-  border-radius: 10px;
-  padding: 2rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-/* Hero Sections */
-.hero {
-  text-align: center;
-  padding: 5rem 2rem;
-  background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
-}
-
-.hero h1 {
-  font-size: 3rem;
-  font-weight: 900;
-}
-
-.hero p {
-  font-size: 1.2rem;
-  color: #444;
-}
-
-/* Forms */
-input,
-textarea {
-  border: 1px solid #ccc;
+/* Buttons */
+button, .cta-btn {
+  display: inline-block;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
   border-radius: 6px;
-  padding: 0.7rem;
-  width: 100%;
-  margin-bottom: 1rem;
+  transition: all 0.3s ease;
 }
 
-input:focus,
-textarea:focus {
-  outline: none;
-  border-color: #ffcf00;
-  box-shadow: 0 0 5px rgba(255, 207, 0, 0.5);
+button:hover, .cta-btn:hover {
+  background: var(--color-gold);
+  color: var(--color-black);
+  transform: translateY(-2px);
+}
+
+/* Subtle entry animation */
+section {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
