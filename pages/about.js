@@ -1,4 +1,8 @@
-// pages/about.js
+import HeroSection from "@/components/blocks/HeroSection";
+import FeatureGrid from "@/components/blocks/FeatureGrid";
+import QuoteBlock from "@/components/blocks/QuoteBlock";
+import CTASection from "@/components/blocks/CTASection";
+
 export default function About() {
   return (
     <section className="container">
